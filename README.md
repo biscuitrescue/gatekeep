@@ -1,0 +1,125 @@
+# Gatekeep 🛡️
+
+**Gatekeep** is a Git-native, policy-as-code platform for managing SSH access across Linux and BSD servers — using declarative YAML files, version control, and lightweight agents.
+
+It replaces fragile scripts and manual key syncing with a secure, auditable, and developer-first approach to server access.
+
+---
+
+## ✨ Features
+
+- 🔐 **Policy-as-Code**: Define SSH access in simple, structured YAML.
+- 🧠 **Smart Agents**: Each server runs a lightweight daemon to pull and apply access policy.
+- 🧾 **Audit-Ready**: Git history = full changelog of who had access and when.
+- 🔁 **Key Rotation**: Keys can have expiry metadata and auto-rotation plans.
+- 💻 **CLI Tool**: Query access, test policies, and generate `authorized_keys` files locally.
+- 🔒 **Secure Sync** (planned): Signed policies and cryptographic validation.
+- 💡 **Self-Hosted or SaaS** (planned): Bring your own Git or use Gatekeep Cloud.
+
+---
+
+## 📁 Project Structure
+```
+gatekeep/
+├── agent/ # C++ agent daemon
+├── backend/ # (Planned) Audit, auth, key signing server
+├── cli/ # Rust CLI tool (gatekeep)
+├── core/ # Shared logic: YAML parsing, policy evaluation
+├── docs/ # Architecture, design, schema
+├── policies/ # Sample YAML policies for dev/demo
+├── README.md
+```
+
+### Example Policy
+
+```yaml
+users:
+    alice:
+        key: ssh-ed25519 AAAAC3Nza... alice@laptop
+        groups: [devs]
+
+    bob:
+        key: ssh-rsa AAAAB3... bob@home
+        groups: [ops]
+
+servers:
+    web-1:
+        allow: [devs]
+
+    db-1:
+        allow: [ops]
+```
+
+---
+
+## 🚀 Getting Started
+
+### CLI
+
+```bash
+# Clone the repo
+git clone https://github.com/your-org/gatekeep
+cd gatekeep
+
+# Build the CLI
+cd cli
+cargo build --release
+
+# Generate authorized_keys for a server
+../target/release/gatekeep generate --server web-1 --policy ../policies/access.yaml
+```
+
+#### CLI Usage
+```bash
+
+gk generate --server <hostname> --policy access.yaml
+gk check-access alice web-1
+gk validate access.yaml
+```
+
+---
+
+### Agent
+
+A minimal daemon installed on every server:
+
+    Pulls latest policy (from Git or API)
+
+    Generates keys using the CLI
+
+    Writes them to /etc/ssh/authorized_keys.d/
+
+    Optionally verifies signatures
+
+    Runs as a systemd service or cronjob
+
+Setup docs: docs/agent_install.md (coming soon)
+
+---
+
+## 🗺 Roadmap
+
+- [ ] Agent policy signature verification
+
+- [ ] FIDO2/WebAuthn support for agents
+
+- [ ] Gatekeep Web UI (read-only dashboard)
+
+- [ ] GitHub/GitLab integration
+
+- [ ] Audit log backend API
+
+- [ ] SaaS + On-prem deployment support
+
+---
+
+## License
+
+MIT License © 2025
+
+---
+
+## 🤝 Contributing
+
+Contributions, suggestions, and pull requests are welcome!
+Please read CONTRIBUTING.md to get started.
