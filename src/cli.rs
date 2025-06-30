@@ -9,7 +9,10 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Commands {
-    Agent,
+    Agent {
+        #[arg(long, short, default_value = "gk.yaml")]
+        config: String,
+    },
 
     Generate {
         #[arg(long)]

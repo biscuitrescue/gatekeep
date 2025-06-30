@@ -1,3 +1,3 @@
-pub fn run() -> anyhow::Result<()> {
+pub fn run(config: &str) -> anyhow::Result<()> {
     Ok(())
 }

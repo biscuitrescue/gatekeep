@@ -9,8 +9,8 @@ fn main() -> anyhow::Result<()> {
     let cl = Cli::parse();
 
     match cl.command {
-        Commands::Agent => {
-            agent::run()?;
+        Commands::Agent { config }=> {
+            agent::run(&config)?;
         }
         Commands::Generate { server, policy } => {
             cli::generate(&server, &policy)?;
