@@ -20,6 +20,7 @@ fn main() -> anyhow::Result<()> {
                         .map_err(|e| anyhow::anyhow!("Failed to get hostname {e}"))?
                         .to_string_lossy()
                         .into_owned();
+                    println!("Using {default} as hostname. Use --server for better accuracy");
                     default
                 }
             };
