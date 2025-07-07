@@ -1,7 +1,6 @@
 use clap::{Parser, Subcommand};
 use std::fs::read;
 use dirs::home_dir;
-use std::path::Path;
 
 #[derive(Parser)]
 #[command(name = "gk", about = "Manually manage SSH access policies")]
@@ -19,10 +18,7 @@ pub enum Commands {
 
     Generate {
         #[arg(long)]
-        server: String,
-
-        #[arg(long)]
-        policy: String,
+        server: Option<String>,
     },
 
     Commit {
@@ -35,7 +31,7 @@ pub enum Commands {
     },
 }
 
-pub fn generate(_server: &str, _policy: &str) -> anyhow::Result<()> {
+pub fn generate(_server: &str) -> anyhow::Result<()> {
     let home_path= home_dir()
         .expect("Failed to get home directory!");
     let path = home_path.join(".ssh/authorized_keys");
