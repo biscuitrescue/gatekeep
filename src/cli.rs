@@ -34,10 +34,13 @@ pub enum Commands {
 }
 
 pub fn generate(server: &str) -> anyhow::Result<()> {
+
+    // set path
     let home_path= home_dir()
         .expect("Failed to get home directory!");
     let path = home_path.join(".ssh/authorized_keys");
 
+    // reading
     let contents = match read_to_string(&path) {
         Ok(data) => data,
         Err(e) => {
@@ -46,9 +49,13 @@ pub fn generate(server: &str) -> anyhow::Result<()> {
         }
     };
 
-
+    // Parsing
     for line in contents.lines().into_iter() {
+        if line.trim().is_empty() || line.starts_with('#') { continue; }
 
+        let mut remaining_str = line.split_whitespace();
+        let keys = remaining_str.next().unwrap();
+        println!("{keys}");
     }
 
     Ok(())
