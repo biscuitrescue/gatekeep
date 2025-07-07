@@ -22,6 +22,11 @@ pub enum Commands {
         policy: String,
     },
 
+    Commit {
+        #[arg(long)]
+        message: String,
+    },
+
     Validate {
         path: String,
     },
@@ -34,5 +39,10 @@ pub fn generate(server: &str, policy: &str) -> anyhow::Result<()> {
 
 pub fn validate(path: &str) -> anyhow::Result<()> {
     println!("validating path: {path}");
+    Ok(())
+}
+
+pub fn commit(message: &str) -> anyhow::Result<()> {
+    println!("Committed with message: {message}");
     Ok(())
 }

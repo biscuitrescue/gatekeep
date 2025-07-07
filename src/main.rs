@@ -10,10 +10,13 @@ fn main() -> anyhow::Result<()> {
 
     match cl.command {
         Commands::Agent { config }=> {
-            agent::run(&config)?;
+            agent::run(&config);
         }
         Commands::Generate { server, policy } => {
             cli::generate(&server, &policy)?;
+        }
+        Commands::Commit { message } => {
+            cli::commit(&message)?;
         }
         Commands::Validate { path } => {
             cli::validate(&path)?;
