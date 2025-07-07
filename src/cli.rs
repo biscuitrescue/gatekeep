@@ -33,7 +33,7 @@ pub enum Commands {
     },
 }
 
-pub fn generate(server: &str) -> anyhow::Result<()> {
+pub fn generate(_server: &str) -> anyhow::Result<()> { // Move to another file
 
     // set path
     let home_path= home_dir()
