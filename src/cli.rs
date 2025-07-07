@@ -1,5 +1,7 @@
+// use anyhow::Ok;
+use std::result::Result::Ok;
 use clap::{Parser, Subcommand};
-use std::fs::read;
+use std::fs::read_to_string;
 use dirs::home_dir;
 
 #[derive(Parser)]
@@ -31,12 +33,23 @@ pub enum Commands {
     },
 }
 
-pub fn generate(_server: &str) -> anyhow::Result<()> {
+pub fn generate(server: &str) -> anyhow::Result<()> {
     let home_path= home_dir()
         .expect("Failed to get home directory!");
     let path = home_path.join(".ssh/authorized_keys");
 
-    if path.exists() { println!("exists"); }
+    let contents = match read_to_string(&path) {
+        Ok(data) => data,
+        Err(e) => {
+            eprintln!("Couldn't open file {path:?}: {e}");
+            String::new()
+        }
+    };
+
+
+    for line in contents.lines().into_iter() {
+
+    }
 
     Ok(())
 }
