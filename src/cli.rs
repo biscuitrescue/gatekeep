@@ -53,9 +53,25 @@ pub fn generate(server: &str) -> anyhow::Result<()> {
     for line in contents.lines().into_iter() {
         if line.trim().is_empty() || line.starts_with('#') { continue; }
 
-        let mut remaining_str = line.split_whitespace();
-        let keys = remaining_str.next().unwrap();
-        println!("{keys}");
+        let mut remaining_str = line
+            .split_whitespace();
+
+        let key_type = remaining_str
+            .next()
+            .unwrap_or("");
+
+        let key = remaining_str
+            .next()
+            .unwrap_or("");
+
+        let user = remaining_str
+            .next()
+            .unwrap_or("")
+            .split('@')
+            .next()
+            .unwrap_or("");
+
+        println!("{key_type}, {key}, {user}");
     }
 
     Ok(())
