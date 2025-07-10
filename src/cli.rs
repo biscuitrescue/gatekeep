@@ -52,6 +52,7 @@ fn write_to_toml(key: String, key_type: String, user: String, server: String) ->
     let toml_string = toml::to_string_pretty(&conf)
         .expect("failed to make toml string");
 
+    // needa append not write -> only lets one user have entry this way
     std::fs::write("./policies/config.toml", toml_string)?;
 
     Ok(())
