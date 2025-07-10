@@ -48,6 +48,12 @@ fn write_to_toml(key: String, key_type: String, user: String, server: String) ->
         user: user,
         server: server,
     };
+
+    let toml_string = toml::to_string_pretty(&conf)
+        .expect("failed to make toml string");
+
+    std::fs::write("./policies/config.toml", toml_string)?;
+
     Ok(())
 }
 
@@ -89,7 +95,7 @@ pub fn generate(server: &str) -> anyhow::Result<()> { // Move to another file
             .unwrap_or("")
             .to_owned();
 
-        write_to_toml(key, key_type, user, server);
+        let _ = write_to_toml(key, key_type, user, server.to_owned());
     }
 
     Ok(())
