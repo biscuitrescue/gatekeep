@@ -1,6 +1,6 @@
-// use anyhow::Ok;
 use std::result::Result::Ok;
 use clap::{Parser, Subcommand};
+use serde::Serialize;
 use std::fs::read_to_string;
 use dirs::home_dir;
 
@@ -33,7 +33,25 @@ pub enum Commands {
     },
 }
 
-pub fn generate(_server: &str) -> anyhow::Result<()> { // Move to another file
+#[derive(Serialize)]
+struct Config {
+    key: String,
+    key_type: String,
+    user: String,
+    server: String,
+}
+
+fn write_to_toml(key: String, key_type: String, user: String, server: String) -> Result<(), std::io::Error> {
+    let conf = Config {
+        key: key,
+        key_type: key_type,
+        user: user,
+        server: server,
+    };
+    Ok(())
+}
+
+pub fn generate(server: &str) -> anyhow::Result<()> { // Move to another file
 
     // set path
     let home_path= home_dir()
@@ -55,23 +73,23 @@ pub fn generate(_server: &str) -> anyhow::Result<()> { // Move to another file
 
         let mut remaining_str = line
             .split_whitespace();
-
         let key_type = remaining_str
             .next()
-            .unwrap_or("");
-
+            .unwrap_or("")
+            .to_owned();
         let key = remaining_str
             .next()
-            .unwrap_or("");
-
+            .unwrap_or("")
+            .to_owned();
         let user = remaining_str
             .next()
             .unwrap_or("")
             .split('@')
             .next()
-            .unwrap_or("");
+            .unwrap_or("")
+            .to_owned();
 
-        println!("{key_type}, {key}, {user}");
+        write_to_toml(key, key_type, user, server);
     }
 
     Ok(())
