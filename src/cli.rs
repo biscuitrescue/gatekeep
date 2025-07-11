@@ -120,4 +120,3 @@ fn write_to_toml(key: String, key_type: String, mut user: String, server: String
 
     Ok(())
 }
-
