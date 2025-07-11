@@ -35,20 +35,20 @@ pub enum Commands {
 
 #[derive(Serialize)]
 struct Config {
+    server: String,
     key: String,
     key_type: String,
-    user: String,
-    server: String,
 }
 
 pub fn generate(server: &str) -> anyhow::Result<()> { // Move to another file
 
     // set path
-    let home_path= home_dir()
+    let home_path = home_dir()
         .expect("Failed to get home directory!");
+
+    // need to implement for windows also
     let path = home_path.join(".ssh/authorized_keys");
 
-    // reading
     let contents = match read_to_string(&path) {
         Ok(data) => data,
         Err(e) => {
@@ -57,7 +57,7 @@ pub fn generate(server: &str) -> anyhow::Result<()> { // Move to another file
         }
     };
 
-    // Parsing
+    // Parsing auth_keys
     for line in contents.lines().into_iter() {
         if line.trim().is_empty() || line.starts_with('#') { continue; }
 
@@ -98,10 +98,9 @@ pub fn commit(message: &str) -> anyhow::Result<()> {
 // refactor
 fn write_to_toml(key: String, key_type: String, mut user: String, server: String) -> Result<(), std::io::Error> {
     let conf = Config {
+        server: server,
         key: key,
         key_type: key_type,
-        user: user.clone(),
-        server: server,
     };
 
     // each user has separate file in ./policies/
