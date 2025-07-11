@@ -1,4 +1,4 @@
-use std::result::Result::Ok;
+use std::{path::Path, result::Result::Ok};
 use clap::{Parser, Subcommand};
 use serde::Serialize;
 use std::fs::read_to_string;
@@ -39,23 +39,6 @@ struct Config {
     key_type: String,
     user: String,
     server: String,
-}
-
-fn write_to_toml(key: String, key_type: String, user: String, server: String) -> Result<(), std::io::Error> {
-    let conf = Config {
-        key: key,
-        key_type: key_type,
-        user: user,
-        server: server,
-    };
-
-    let toml_string = toml::to_string_pretty(&conf)
-        .expect("failed to make toml string");
-
-    // needa append not write -> only lets one user have entry this way
-    std::fs::write("./policies/config.toml", toml_string)?;
-
-    Ok(())
 }
 
 pub fn generate(server: &str) -> anyhow::Result<()> { // Move to another file
@@ -111,3 +94,30 @@ pub fn commit(message: &str) -> anyhow::Result<()> {
     println!("Committed with message: {message}");
     Ok(())
 }
+
+// refactor
+fn write_to_toml(key: String, key_type: String, mut user: String, server: String) -> Result<(), std::io::Error> {
+    let conf = Config {
+        key: key,
+        key_type: key_type,
+        user: user.clone(),
+        server: server,
+    };
+
+    // needa append not write -> only lets one user have entry this way
+    if !Path::new("./policies/").exists() {
+        println!("Directory not found. Creating ...");
+        std::fs::create_dir("./policies/")?;
+    }
+
+    {
+        let toml_string = toml::to_string_pretty(&conf)
+            .expect("Failed to make toml_string");
+        user = user + ".toml";
+        let path = Path::new("./policies/").join(user);
+        std::fs::write(path, toml_string)?;
+    }
+
+    Ok(())
+}
+

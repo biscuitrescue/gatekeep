@@ -1,0 +1,4 @@
+key = "AAAAC3NzaC1lZDI1NTE5AAAAIGFdZyo6FqHf0dHL4RRo9lD5KyQ3PpGrlKEm+AaNizGe"
+key_type = "ssh-ed25519"
+user = "alice"
+server = "nixos"
