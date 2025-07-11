@@ -104,7 +104,7 @@ fn write_to_toml(key: String, key_type: String, mut user: String, server: String
         server: server,
     };
 
-    // needa append not write -> only lets one user have entry this way
+    // each user has separate file in ./policies/
     if !Path::new("./policies/").exists() {
         println!("Directory not found. Creating ...");
         std::fs::create_dir("./policies/")?;

@@ -1,4 +1,0 @@
-key = "AAAAB3NzaC1yc2EAAAADAQABAAABAQC7u4bFqdpH+7b"
-key_type = "ssh-rsa"
-user = "bob"
-server = "nixos"

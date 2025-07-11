@@ -1,4 +1,0 @@
-key = "AAAAC3NzaC1lZDI1NTE5AAAAICmNUiEnf1OSqEX0TX"
-key_type = "ssh-ed25519"
-user = "example"
-server = "nixos"
