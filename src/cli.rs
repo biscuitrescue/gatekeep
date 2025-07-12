@@ -14,7 +14,7 @@ pub struct Cli {
 #[derive(Subcommand)]
 pub enum Commands {
     Agent {
-        #[arg(long, short, default_value = "gk.yaml")]
+        #[arg(long, short)]
         config: String,
     },
 
@@ -32,6 +32,7 @@ pub enum Commands {
         path: String,
     },
 }
+
 
 pub fn generate(server: &str) -> anyhow::Result<()> {
 
