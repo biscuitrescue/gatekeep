@@ -3,6 +3,11 @@ use std::fs::create_dir_all;
 use std::path::Path;
 use crate::core::config;
 
+const cur_path: Path::PathBuf = match std::env::current_dir() {
+    Ok(it) => it,
+    Err(err) => Err(err),
+};
+
 #[derive(Serialize, Deserialize)]
 struct Policy {
     pub user: String,
@@ -29,9 +34,13 @@ fn write_policy(key: &str, key_type: &str, user: &str, server: &str) -> Result<(
 }
 
 pub fn validate(user: &str, server: &str) -> anyhow::Result<()> {
-    let conf_path = Path::new("./config")
-        .join(server)
-        .join(format!("{user}.toml"));
+    let conf_path = cur_path.join(format!("config/{server}/{user}.toml"));
+
+    if !conf_path.exists() {
+        return Err(anyhow::anyhow! (
+            format!("config path: {} doesnt exist", conf_path.to_string_lossy()))
+        );
+    }
 
     if let Ok(conf) = config::read_conf(&conf_path) {
         write_policy(&conf.key, &conf.key_type, user, server)?;

@@ -34,6 +34,7 @@ pub enum Commands {
     },
 }
 
+
 pub fn commit(message: &str) -> anyhow::Result<()> {
     println!("Committed with message: {message}");
     Ok(())
