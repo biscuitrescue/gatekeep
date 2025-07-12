@@ -19,7 +19,7 @@ It replaces fragile scripts and manual key syncing with a secure, auditable, and
 ---
 
 ## 📁 Project Structure
-```
+```bash
 gatekeep/
 ├── agent/ # C++ agent daemon
 ├── backend/ # (Planned) Audit, auth, key signing server

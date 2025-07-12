@@ -1,8 +1,8 @@
-use std::{path::Path, result::Result::Ok};
 use clap::{Parser, Subcommand};
+use dirs::home_dir;
 use serde::Serialize;
 use std::fs::read_to_string;
-use dirs::home_dir;
+use std::{path::Path, result::Result::Ok};
 
 #[derive(Parser)]
 #[command(name = "gk", about = "Manually manage SSH access policies")]
@@ -40,13 +40,12 @@ struct Config {
     key_type: String,
 }
 
-pub fn generate(server: &str) -> anyhow::Result<()> { // Move to another file
-
+// TODO: Move to another file
+pub fn generate(server: &str) -> anyhow::Result<()> {
     // set path
-    let home_path = home_dir()
-        .expect("Failed to get home directory!");
+    let home_path = home_dir().expect("Failed to get home dir");
 
-    // need to implement for windows also
+    //  TODO: need to implement for windows also
     let path = home_path.join(".ssh/authorized_keys");
 
     let contents = match read_to_string(&path) {
@@ -59,18 +58,13 @@ pub fn generate(server: &str) -> anyhow::Result<()> { // Move to another file
 
     // Parsing auth_keys
     for line in contents.lines().into_iter() {
-        if line.trim().is_empty() || line.starts_with('#') { continue; }
+        if line.trim().is_empty() || line.starts_with('#') {
+            continue;
+        }
 
-        let mut remaining_str = line
-            .split_whitespace();
-        let key_type = remaining_str
-            .next()
-            .unwrap_or("")
-            .to_owned();
-        let key = remaining_str
-            .next()
-            .unwrap_or("")
-            .to_owned();
+        let mut remaining_str = line.split_whitespace();
+        let key_type = remaining_str.next().unwrap_or("").to_owned();
+        let key = remaining_str.next().unwrap_or("").to_owned();
         let user = remaining_str
             .next()
             .unwrap_or("")
@@ -95,8 +89,8 @@ pub fn commit(message: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
-// refactor
-fn write_to_toml(key: String, key_type: String, mut user: String, server: String) -> Result<(), std::io::Error> {
+// FIX: error handling
+fn write_to_toml(key: String, key_type: String, user: String, server: String) -> Result<(), std::io::Error> {
     let conf = Config {
         server: server,
         key: key,
@@ -110,10 +104,8 @@ fn write_to_toml(key: String, key_type: String, mut user: String, server: String
     }
 
     {
-        let toml_string = toml::to_string_pretty(&conf)
-            .expect("Failed to make toml_string");
-        user = user + ".toml";
-        let path = Path::new("./policies/").join(user);
+        let toml_string = toml::to_string_pretty(&conf).expect("Failed to make toml_string");
+        let path = Path::new("./policies/").join(user + ".toml");
         std::fs::write(path, toml_string)?;
     }
 
