@@ -17,10 +17,10 @@ pub fn read_conf(file: &Path) -> anyhow::Result<Config> {
     Ok(config)
 }
 
-fn write_config(key: String, key_type: String, user: String, server: String) -> Result<(), std::io::Error> {
+fn write_config(key: &str, key_type: &str, user: &str, server: &str) -> Result<(), std::io::Error> {
     let conf = Config {
-        key: key,
-        key_type: key_type,
+        key: key.to_owned(),
+        key_type: key_type.to_owned(),
     };
 
     // each server has diff directory
@@ -58,17 +58,16 @@ pub fn generate(server: &str) -> anyhow::Result<()> {
         }
 
         let mut remaining_str = line.split_whitespace();
-        let key_type = remaining_str.next().unwrap_or("").to_owned();
-        let key = remaining_str.next().unwrap_or("").to_owned();
+        let key_type = remaining_str.next().unwrap_or("");
+        let key = remaining_str.next().unwrap_or("");
         let user = remaining_str
             .next()
             .unwrap_or("")
             .split('@')
             .next()
-            .unwrap_or("")
-            .to_owned();
+            .unwrap_or("");
 
-        let _ = write_config(key, key_type, user, server.to_owned());
+        let _ = write_config(key, key_type, user, server)?;
     }
 
     Ok(())
