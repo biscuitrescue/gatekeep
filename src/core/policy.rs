@@ -18,7 +18,7 @@ fn write_policy(key: &str, key_type: &str, user: &str, server: &str) -> Result<(
     };
 
     // Each server has different policy
-    create_dir_all(format!("./policy"))?;
+    create_dir_all("./policy")?;
 
     let toml_string = toml::to_string_pretty(&policy)
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
