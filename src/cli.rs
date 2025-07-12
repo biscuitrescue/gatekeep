@@ -98,14 +98,12 @@ fn write_to_toml(key: String, key_type: String, user: String, server: String) ->
     };
 
     // each user has separate file in ./policies/
-    if !Path::new("./policies/").exists() {
-        println!("Directory not found. Creating ...");
-        std::fs::create_dir("./policies/")?;
-    }
+    std::fs::create_dir_all("./policies/")?;
 
     {
-        let toml_string = toml::to_string_pretty(&conf).expect("Failed to make toml_string");
-        let path = Path::new("./policies/").join(user + ".toml");
+        let toml_string = toml::to_string_pretty(&conf)
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+        let path = Path::new("./policies/").join(format!("{user}.toml"));
         std::fs::write(path, toml_string)?;
     }
 
