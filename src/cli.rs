@@ -1,8 +1,8 @@
 use clap::{Parser, Subcommand};
 use dirs::home_dir;
-use serde::Serialize;
 use std::fs::read_to_string;
-use std::{path::Path, result::Result::Ok};
+use std::result::Result::Ok;
+use crate::core::config;
 
 #[derive(Parser)]
 #[command(name = "gk", about = "Manually manage SSH access policies")]
@@ -33,14 +33,8 @@ pub enum Commands {
     },
 }
 
-#[derive(Serialize)]
-struct Config {
-    key: String,
-    key_type: String,
-}
-
-// TODO: Move to another file
 pub fn generate(server: &str) -> anyhow::Result<()> {
+
     // set path
     let home_path = home_dir().expect("Failed to get home dir");
 
@@ -72,7 +66,7 @@ pub fn generate(server: &str) -> anyhow::Result<()> {
             .unwrap_or("")
             .to_owned();
 
-        let _ = write_to_toml(key, key_type, user, server.to_owned());
+        let _ = config::write_to_toml(key, key_type, user, server.to_owned());
     }
 
     Ok(())
@@ -85,23 +79,5 @@ pub fn validate(path: &str) -> anyhow::Result<()> {
 
 pub fn commit(message: &str) -> anyhow::Result<()> {
     println!("Committed with message: {message}");
-    Ok(())
-}
-
-// FIX: error handling
-fn write_to_toml(key: String, key_type: String, user: String, server: String) -> Result<(), std::io::Error> {
-    let conf = Config {
-        key: key,
-        key_type: key_type,
-    };
-
-    // each user has separate file in ./policies/
-    std::fs::create_dir_all(format!("./policies/{server}"))?;
-
-    let toml_string = toml::to_string_pretty(&conf)
-        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
-    let path = Path::new("./policies/").join(server).join(format!("{user}.toml"));
-    std::fs::write(path, toml_string)?;
-
     Ok(())
 }
