@@ -5,16 +5,16 @@ use crate::core::config;
 
 #[derive(Serialize, Deserialize)]
 struct Policy {
-    user: String,
-    key: String,
-    key_type: String,
+    pub user: String,
+    pub key: String,
+    pub key_type: String,
 }
 
-fn write_policy(key: String, key_type: String, user: String, server: String) -> Result<(), anyhow::Error> {
-    let policy = Policy{
-        user: user,
-        key: key,
-        key_type: key_type,
+fn write_policy(key: &str, key_type: &str, user: &str, server: &str) -> Result<(), anyhow::Error> {
+    let policy = Policy {
+        user: user.to_owned(), // TODO: use lifetimes
+        key: key.to_owned(),
+        key_type: key_type.to_owned(),
     };
 
     // Each server has different policy
@@ -29,8 +29,13 @@ fn write_policy(key: String, key_type: String, user: String, server: String) -> 
 }
 
 pub fn validate(user: &str, server: &str) -> anyhow::Result<()> {
-    let conf_path = Path::new("./config").join(server).join(format!("{user}.toml"));
-    // let config = config::read_conf(conf_path);
-    println!("{}", conf_path.to_string_lossy());
+    let conf_path = Path::new("./config")
+        .join(server)
+        .join(format!("{user}.toml"));
+
+    if let Ok(conf) = config::read_conf(&conf_path) {
+        write_policy(&conf.key, &conf.key_type, user, server)?;
+    }
+
     Ok(())
 }

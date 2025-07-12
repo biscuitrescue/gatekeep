@@ -4,15 +4,14 @@ use std::fs::{read_to_string, create_dir_all};
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
-struct Config {
-    key: String,
-    key_type: String,
+pub struct Config {
+    pub key: String,
+    pub key_type: String,
 }
 
-pub fn read_conf(file: String) -> anyhow::Result<Config> {
-    let path = std::path::Path::new(&file);
-    let content = std::fs::read_to_string(path)
-        .map_err(|e| anyhow::anyhow!("Failed to read file: {} with error: {}", file, e))?;
+pub fn read_conf(file: &Path) -> anyhow::Result<Config> {
+    let content = std::fs::read_to_string(file)
+        .map_err(|e| anyhow::anyhow!("Failed to read file: {} with error: {}", file.to_str().unwrap(), e))?;
     let config = toml::from_str(&content)
         .map_err(|e| anyhow::anyhow!("Failed to convert toml to struct with err {e}"))?;
     Ok(config)
