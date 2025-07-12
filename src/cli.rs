@@ -35,7 +35,6 @@ pub enum Commands {
 
 #[derive(Serialize)]
 struct Config {
-    server: String,
     key: String,
     key_type: String,
 }
@@ -92,20 +91,17 @@ pub fn commit(message: &str) -> anyhow::Result<()> {
 // FIX: error handling
 fn write_to_toml(key: String, key_type: String, user: String, server: String) -> Result<(), std::io::Error> {
     let conf = Config {
-        server: server,
         key: key,
         key_type: key_type,
     };
 
     // each user has separate file in ./policies/
-    std::fs::create_dir_all("./policies/")?;
+    std::fs::create_dir_all(format!("./policies/{server}"))?;
 
-    {
-        let toml_string = toml::to_string_pretty(&conf)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
-        let path = Path::new("./policies/").join(format!("{user}.toml"));
-        std::fs::write(path, toml_string)?;
-    }
+    let toml_string = toml::to_string_pretty(&conf)
+        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+    let path = Path::new("./policies/").join(server).join(format!("{user}.toml"));
+    std::fs::write(path, toml_string)?;
 
     Ok(())
 }
