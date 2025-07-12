@@ -1,4 +1,11 @@
 use std::path::Path;
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize)]
+struct Config {
+    key: String,
+    key_type: String,
+}
 
 pub fn _read_conf(file: String) -> anyhow::Result<()>{
     let path = std::path::Path::new(&file);
@@ -7,7 +14,7 @@ pub fn _read_conf(file: String) -> anyhow::Result<()>{
 }
 
 pub fn write_to_toml(key: String, key_type: String, user: String, server: String) -> Result<(), std::io::Error> {
-    let conf = crate::core::commons::Config {
+    let conf = Config {
         key: key,
         key_type: key_type,
     };
