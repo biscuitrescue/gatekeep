@@ -1,7 +1,7 @@
 use std::path::Path;
-use dirs::home_dir;
 use std::fs::{read_to_string, create_dir_all};
 use serde::{Serialize, Deserialize};
+use crate::core::globals;
 
 #[derive(Serialize, Deserialize)]
 pub struct Config {
@@ -25,7 +25,9 @@ fn write_config(key: &str, key_type: &str, user: &str, server: &str) -> Result<(
 
     // each server has diff directory
     // each user has separate file in ./configs/
-    create_dir_all(format!("./config/{server}"))?;
+    let path = globals::CUR_DIR.join(format!("config/{server}"));
+
+    create_dir_all(path)?;
 
     let toml_string = toml::to_string_pretty(&conf)
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
@@ -37,11 +39,12 @@ fn write_config(key: &str, key_type: &str, user: &str, server: &str) -> Result<(
 
 pub fn generate(server: &str) -> anyhow::Result<()> {
 
-    // set path
-    let home_path = home_dir().expect("Failed to get home dir");
-
     //  TODO: need to implement for windows also
-    let path = home_path.join(".ssh/authorized_keys");
+    let path = globals::HOME_DIR.join(".ssh/authorized_keys");
+
+    if !path.exists() {
+        return Err(anyhow::anyhow!("no authorized keys exist"));
+    }
 
     let contents = match read_to_string(&path) {
         Ok(data) => data,

@@ -1,12 +1,7 @@
 use serde::{Serialize, Deserialize};
 use std::fs::create_dir_all;
 use std::path::Path;
-use crate::core::config;
-
-const cur_path: Path::PathBuf = match std::env::current_dir() {
-    Ok(it) => it,
-    Err(err) => Err(err),
-};
+use crate::core::{config, globals};
 
 #[derive(Serialize, Deserialize)]
 struct Policy {
@@ -34,7 +29,7 @@ fn write_policy(key: &str, key_type: &str, user: &str, server: &str) -> Result<(
 }
 
 pub fn validate(user: &str, server: &str) -> anyhow::Result<()> {
-    let conf_path = cur_path.join(format!("config/{server}/{user}.toml"));
+    let conf_path = globals::CUR_DIR.join(format!("config/{server}/{user}.toml"));
 
     if !conf_path.exists() {
         return Err(anyhow::anyhow! (
