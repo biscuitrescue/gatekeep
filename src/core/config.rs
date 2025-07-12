@@ -1,4 +1,6 @@
 use std::path::Path;
+use dirs::home_dir;
+use std::fs::{read_to_string, create_dir_all};
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
@@ -13,20 +15,59 @@ pub fn _read_conf(file: String) -> anyhow::Result<()>{
     Ok(toml::from_str(&content)?)
 }
 
-pub fn write_to_toml(key: String, key_type: String, user: String, server: String) -> Result<(), std::io::Error> {
+fn write_config(key: String, key_type: String, user: String, server: String) -> Result<(), std::io::Error> {
     let conf = Config {
         key: key,
         key_type: key_type,
     };
 
     // each server has diff directory
-    // each user has separate file in ./policies/
-    std::fs::create_dir_all(format!("./policies/{server}"))?;
+    // each user has separate file in ./configs/
+    create_dir_all(format!("./config/{server}"))?;
 
     let toml_string = toml::to_string_pretty(&conf)
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
-    let path = Path::new("./policies/").join(server).join(format!("{user}.toml"));
+    let path = Path::new("./config/").join(server).join(format!("{user}.toml"));
     std::fs::write(path, toml_string)?;
+
+    Ok(())
+}
+
+pub fn generate(server: &str) -> anyhow::Result<()> {
+
+    // set path
+    let home_path = home_dir().expect("Failed to get home dir");
+
+    //  TODO: need to implement for windows also
+    let path = home_path.join(".ssh/authorized_keys");
+
+    let contents = match read_to_string(&path) {
+        Ok(data) => data,
+        Err(e) => {
+            eprintln!("Couldn't open file {path:?}: {e}");
+            String::new()
+        }
+    };
+
+    // Parsing auth_keys
+    for line in contents.lines().into_iter() {
+        if line.trim().is_empty() || line.starts_with('#') {
+            continue;
+        }
+
+        let mut remaining_str = line.split_whitespace();
+        let key_type = remaining_str.next().unwrap_or("").to_owned();
+        let key = remaining_str.next().unwrap_or("").to_owned();
+        let user = remaining_str
+            .next()
+            .unwrap_or("")
+            .split('@')
+            .next()
+            .unwrap_or("")
+            .to_owned();
+
+        let _ = write_config(key, key_type, user, server.to_owned());
+    }
 
     Ok(())
 }
