@@ -9,10 +9,13 @@ struct Config {
     key_type: String,
 }
 
-pub fn _read_conf(file: String) -> anyhow::Result<()>{
+pub fn read_conf(file: String) -> anyhow::Result<Config> {
     let path = std::path::Path::new(&file);
-    let content = std::fs::read_to_string(path).expect("Failed to read file");
-    Ok(toml::from_str(&content)?)
+    let content = std::fs::read_to_string(path)
+        .map_err(|e| anyhow::anyhow!("Failed to read file: {} with error: {}", file, e))?;
+    let config = toml::from_str(&content)
+        .map_err(|e| anyhow::anyhow!("Failed to convert toml to struct with err {e}"))?;
+    Ok(config)
 }
 
 fn write_config(key: String, key_type: String, user: String, server: String) -> Result<(), std::io::Error> {

@@ -1,6 +1,7 @@
 use serde::{Serialize, Deserialize};
 use std::fs::create_dir_all;
 use std::path::Path;
+use crate::core::config;
 
 #[derive(Serialize, Deserialize)]
 struct Policy {
@@ -27,7 +28,9 @@ fn write_policy(key: String, key_type: String, user: String, server: String) -> 
     Ok(())
 }
 
-pub fn validate(path: &str, server: &str) -> anyhow::Result<()> {
-    println!("validating path: {path} in server: {server}");
+pub fn validate(user: &str, server: &str) -> anyhow::Result<()> {
+    let conf_path = Path::new("./config").join(server).join(format!("{user}.toml"));
+    // let config = config::read_conf(conf_path);
+    println!("{}", conf_path.to_string_lossy());
     Ok(())
 }
