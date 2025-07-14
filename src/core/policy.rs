@@ -1,6 +1,5 @@
 use serde::{Serialize, Deserialize};
 use std::fs::create_dir_all;
-use std::path::Path;
 use crate::core::{config, globals};
 
 #[derive(Serialize, Deserialize)]
@@ -18,12 +17,13 @@ fn write_policy(key: &str, key_type: &str, user: &str, server: &str) -> Result<(
     };
 
     // Each server has different policy
-    create_dir_all("./policy")?;
+    let path = globals::CUR_DIR.join("policy");
+    create_dir_all(&path)?;
 
     let toml_string = toml::to_string_pretty(&policy)
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
-    let path = Path::new("./policy").join(format!("{server}.toml"));
-    std::fs::write(path, toml_string)?;
+
+    std::fs::write(path.join(format!("{server}.toml")), toml_string)?;
 
     Ok(())
 }

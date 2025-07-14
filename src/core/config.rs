@@ -27,12 +27,12 @@ fn write_config(key: &str, key_type: &str, user: &str, server: &str) -> Result<(
     // each user has separate file in ./configs/
     let path = globals::CUR_DIR.join(format!("config/{server}"));
 
-    create_dir_all(path)?;
+    create_dir_all(&path)?;
 
     let toml_string = toml::to_string_pretty(&conf)
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
-    let path = Path::new("./config/").join(server).join(format!("{user}.toml"));
-    std::fs::write(path, toml_string)?;
+
+    std::fs::write(path.join(format!("{user}.toml")), toml_string)?;
 
     Ok(())
 }
