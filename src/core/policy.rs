@@ -42,7 +42,7 @@ pub fn validate(user: &str, server: &str) -> anyhow::Result<()> {
             eprintln!("Weak encryption detected. Consider using id_ed25519.")
         }
         write_policy(&conf.key, &conf.key_type, user, server)?;
-    } else { return Err(anyhow::anyhow!("Couldn't read config file")); }
+    } else { return Err(anyhow::anyhow!("Couldn't read config file: {}", conf_path.display())); }
 
     Ok(())
 }
