@@ -1,6 +1,12 @@
 // use crate::core::config;
 use anyhow::Result;
 
+struct AgentConfig<'a> {
+    r#type: &'a str,
+    url: &'a str,
+
+}
+
 pub fn run(config: &str) -> ! {
     println!("Agent running with config path specified: {config}");
 
