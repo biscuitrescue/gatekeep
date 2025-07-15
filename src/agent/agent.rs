@@ -32,26 +32,6 @@ struct AuthKeys {
     path: String
 }
 
-/*
-TODO: add logging + security + service
-#[derive(Serialize, Deserialize)]
-struct Logging<'a> {
-level
-file
-}
-
-#[derive(Serialize, Deserialize)]
-struct Security<'a> {
-signature
-trusted keys
-}
-
-#[derive(Serialize, Deserialize)]
-struct Service<'a> {
-run as service
-}
-*/
-
 pub fn run(config: PathBuf) -> ! {
     println!("Agent running with config path specified: {}", config.to_string_lossy());
 
