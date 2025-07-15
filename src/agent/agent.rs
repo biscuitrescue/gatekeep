@@ -1,11 +1,36 @@
-// use crate::core::config;
 use anyhow::Result;
+use serde::{Serialize, Deserialize};
+use std::borrow::Cow;
 
-struct AgentConfig<'a> {
-    r#type: &'a str,
-    url: &'a str,
+// #[derive(Serialize, Deserialize)]
+// struct AgentConfig<'a> {
+//     pub policysource: PolicySource<'a>,
+// }
 
+#[derive(Serialize, Deserialize)]
+struct PolicySource<'a> {
+    r#type: Cow<'a, str>,
+    url: Cow<'a, str>,
+    branch: Option<Cow<'a, str>>,
+    ssh_key: Cow<'a, str>,
 }
+
+#[derive(Serialize, Deserialize)]
+struct AuthKeys<'a> {
+    path: &'a str,
+}
+
+// TODO: add logging + security
+// #[derive(Serialize, Deserialize)]
+// struct Logging<'a> {
+
+// }
+
+// #[derive(Serialize, Deserialize)]
+// struct Security<'a> {
+// }
+
+
 
 pub fn run(config: &str) -> ! {
     println!("Agent running with config path specified: {config}");
