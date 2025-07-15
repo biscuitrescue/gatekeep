@@ -1,9 +1,10 @@
-use clap::Parser;
-use cli::{Cli, Commands};
-
 mod cli;
 mod agent;
 mod core;
+
+use clap::Parser;
+use cli::cli::{Cli, Commands};
+
 
 fn get_server() -> Result<String, anyhow::Error> {
     let owned = hostname::get()
@@ -20,24 +21,24 @@ fn main() -> anyhow::Result<()> {
 
     match cl.command {
         Commands::Agent { config }=> {
-            agent::run(&config);
+            agent::agent::run(&config);
         }
         Commands::Generate { server } => {
             let server_name: String = match server {
                 Some(s) => s,
                 None => get_server().unwrap(),
             };
-            core::config::generate(&server_name)?;
+            cli::config::generate(&server_name)?;
         }
         Commands::Commit { message } => {
-            cli::commit(&message)?;
+            cli::cli::commit(&message)?;
         }
-        Commands::Validate { path, server } => {
+        Commands::Validate { user, server } => {
             let server_name: String = match server {
                 Some(s) => s,
                 None => get_server().unwrap(),
             };
-            core::policy::validate(&path, &server_name)?;
+            cli::policy::validate(&user, &server_name)?;
         }
     }
 

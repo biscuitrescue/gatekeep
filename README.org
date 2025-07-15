@@ -109,7 +109,3 @@ Setup docs: =docs/agent_install.md= (coming soon)
 BSDv3 License © 2025
 
 ---
-
-* 🤝 Contributing
-Contributions, suggestions, and pull requests are welcome!
-Please read =CONTRIBUTING.md= to get started.
