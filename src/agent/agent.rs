@@ -1,23 +1,23 @@
 use anyhow::Result;
 use serde::{Serialize, Deserialize};
-use std::borrow::Cow;
-
-// #[derive(Serialize, Deserialize)]
-// struct AgentConfig<'a> {
-//     pub policysource: PolicySource<'a>,
-// }
 
 #[derive(Serialize, Deserialize)]
-struct PolicySource<'a> {
-    r#type: Cow<'a, str>,
-    url: Cow<'a, str>,
-    branch: Option<Cow<'a, str>>,
-    ssh_key: Cow<'a, str>,
+struct AgentConfig {
+    pub policy_source: PolicySource,
+    pub aut_keys: AuthKeys,
 }
 
 #[derive(Serialize, Deserialize)]
-struct AuthKeys<'a> {
-    path: &'a str,
+struct PolicySource {
+    r#type: String,
+    url: String,
+    branch: Option<String>,
+    ssh_key: String,
+}
+
+#[derive(Serialize, Deserialize)]
+struct AuthKeys {
+    path: String
 }
 
 // TODO: add logging + security
@@ -29,7 +29,6 @@ struct AuthKeys<'a> {
 // #[derive(Serialize, Deserialize)]
 // struct Security<'a> {
 // }
-
 
 
 pub fn run(config: &str) -> ! {
