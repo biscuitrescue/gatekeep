@@ -23,9 +23,9 @@ fn main() -> anyhow::Result<()> {
 
     match cl.command {
         Commands::Agent { subcommand } => match subcommand {
-            AgentSubcommand::Init { source, config } => {
-                println!("Initialising agent config at {}", config);
-                agent::agent::init(&config)?;
+            AgentSubcommand::Init { source, path } => {
+                println!("Initialising agent config at {}", path);
+                agent::agent::init(source, &path)?;
             }
             AgentSubcommand::Run { config } => {
                 match config {

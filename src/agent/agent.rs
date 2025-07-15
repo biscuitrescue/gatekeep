@@ -60,10 +60,12 @@ pub fn run(config: PathBuf) -> ! {
     }
 }
 
-pub fn init(_conf_path: &str) -> Result<()> {
+pub fn init(source: PolicySource, path: &str) -> Result<()> {
+
     let config = AgentConfig {
-        policy_source: PolicySource { r#type: (), url: (), branch: (), ssh_key: () },
-        auth_keys: AuthKeys { path: () }
+        policy_source: source,
+        auth_keys: AuthKeys { path: path.to_owned() }
     };
+
     Ok(())
 }

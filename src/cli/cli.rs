@@ -41,7 +41,7 @@ pub enum AgentSubcommand {
         #[clap(flatten)]
         source: crate::agent::agent::PolicySource,
         #[arg(long, short, default_value = "./docs/config.toml")]
-        config: String,
+        path: String,
     },
 
     Run {
