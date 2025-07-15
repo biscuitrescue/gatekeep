@@ -30,21 +30,16 @@ fn main() -> anyhow::Result<()> {
             AgentSubcommand::Run { config } => {
                 match config {
                     Some(val) => {
-                        agent::agent::run(val);
+                        agent::agent::run(val.into());
                     }
                     None => {
                         let path = globals::CUR_DIR.join("docs/config.toml");
-                        if !path.exists() {
-                            return Err(anyhow::Error);
-                        }
+                        if !path.exists() { return Err(anyhow::anyhow!("No config file found or supplied! Quitting...")); }
                         agent::agent::run(path);
                     }
                 }
             }
         }
-        // Commands::Agent { config }=> {
-        //     agent::agent::run(&config);
-        // }
         Commands::Generate { server } => {
             let server_name: String = match server {
                 Some(s) => s,

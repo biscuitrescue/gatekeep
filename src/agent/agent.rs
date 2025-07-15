@@ -1,4 +1,6 @@
 #![allow(unused)]
+use std::path::PathBuf;
+
 use clap::Args;
 use anyhow::Result;
 use serde::{Serialize, Deserialize};
@@ -50,8 +52,8 @@ run as service
 }
 */
 
-pub fn run(config: &str) -> ! {
-    println!("Agent running with config path specified: {config}");
+pub fn run(config: PathBuf) -> ! {
+    println!("Agent running with config path specified: {}", config.to_string_lossy());
 
     loop {
         std::thread::sleep(std::time::Duration::from_secs(10));
