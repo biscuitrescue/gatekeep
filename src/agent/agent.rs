@@ -1,18 +1,28 @@
+#![allow(unused)]
+use clap::Args;
 use anyhow::Result;
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
 struct AgentConfig {
     pub policy_source: PolicySource,
-    pub aut_keys: AuthKeys,
+    pub auth_keys: AuthKeys,
 }
 
-#[derive(Serialize, Deserialize)]
-struct PolicySource {
-    r#type: String,
-    url: String,
-    branch: Option<String>,
-    ssh_key: String,
+#[derive(Args, Serialize, Deserialize)]
+#[derive(Clone)]
+pub struct PolicySource {
+    #[arg(long, default_value = "git")]
+    pub r#type: String,
+
+    #[arg(long)]
+    pub url: String,
+
+    #[arg(long)]
+    pub branch: Option<String>,
+
+    #[arg(long)]
+    pub ssh_key: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -20,16 +30,25 @@ struct AuthKeys {
     path: String
 }
 
-// TODO: add logging + security
-// #[derive(Serialize, Deserialize)]
-// struct Logging<'a> {
+/*
+TODO: add logging + security + service
+#[derive(Serialize, Deserialize)]
+struct Logging<'a> {
+level
+file
+}
 
-// }
+#[derive(Serialize, Deserialize)]
+struct Security<'a> {
+signature
+trusted keys
+}
 
-// #[derive(Serialize, Deserialize)]
-// struct Security<'a> {
-// }
-
+#[derive(Serialize, Deserialize)]
+struct Service<'a> {
+run as service
+}
+*/
 
 pub fn run(config: &str) -> ! {
     println!("Agent running with config path specified: {config}");
@@ -40,5 +59,9 @@ pub fn run(config: &str) -> ! {
 }
 
 pub fn init(_conf_path: &str) -> Result<()> {
+    let config = AgentConfig {
+        policy_source: PolicySource { r#type: (), url: (), branch: (), ssh_key: () },
+        auth_keys: AuthKeys { path: () }
+    };
     Ok(())
 }

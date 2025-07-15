@@ -2,8 +2,10 @@ mod cli;
 mod agent;
 mod core;
 
+use core::globals;
+
 use clap::Parser;
-use cli::cli::{Cli, Commands};
+use cli::cli::{AgentSubcommand, Cli, Commands};
 
 
 fn get_server() -> Result<String, anyhow::Error> {
@@ -20,9 +22,29 @@ fn main() -> anyhow::Result<()> {
     let cl = Cli::parse();
 
     match cl.command {
-        Commands::Agent { config }=> {
-            agent::agent::run(&config);
+        Commands::Agent { subcommand } => match subcommand {
+            AgentSubcommand::Init { source, config } => {
+                println!("Initialising agent config at {}", config);
+                agent::agent::init(&config)?;
+            }
+            AgentSubcommand::Run { config } => {
+                match config {
+                    Some(val) => {
+                        agent::agent::run(val);
+                    }
+                    None => {
+                        let path = globals::CUR_DIR.join("docs/config.toml");
+                        if !path.exists() {
+                            return Err(anyhow::Error);
+                        }
+                        agent::agent::run(path);
+                    }
+                }
+            }
         }
+        // Commands::Agent { config }=> {
+        //     agent::agent::run(&config);
+        // }
         Commands::Generate { server } => {
             let server_name: String = match server {
                 Some(s) => s,
