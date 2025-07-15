@@ -106,7 +106,7 @@ Setup docs: =docs/agent_install.md= (coming soon)
 ---
 
 * 📜 License
-MIT License © 2025
+BSDv3 License © 2025
 
 ---
 
