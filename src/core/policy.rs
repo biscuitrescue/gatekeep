@@ -38,8 +38,11 @@ pub fn validate(user: &str, server: &str) -> anyhow::Result<()> {
     }
 
     if let Ok(conf) = config::read_conf(&conf_path) {
+        if conf.key_type == String::from("id_rsa") {
+            eprintln!("Weak encryption detected. Consider using id_ed25519.")
+        }
         write_policy(&conf.key, &conf.key_type, user, server)?;
-    }
+    } else { return Err(anyhow::anyhow!("Couldn't read config file")); }
 
     Ok(())
 }
