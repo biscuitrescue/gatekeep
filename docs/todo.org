@@ -4,26 +4,14 @@
 #+STARTUP: showeverything
 #+OPTIONS: toc:2
 
-* TOC :toc:
-- [[#agent][Agent]]
-  - [[#init][init]]
-  - [[#run][run]]
-- [[#cli][Cli]]
-  - [[#config][config]]
-  - [[#policy][policy]]
+- [ ] Agent
+  - [ ] write to toml
+  - [ ] impl config specified
 
-* Agent
-** init
-- [ ] write to toml
-** run
-- [ ] impl config specified
-* Cli
-** config
-*** Generate
-- [ ] Hash keys??
-** policy
-*** validate
-**** Checks
-- [x] weak key_type
-- [ ] duplicate user for server
-- [ ] duplicate keys for diff servers
+- [ ] Cli
+  - [ ] Generate
+    - [ ] Hash keys??
+  - [ ] validate
+    - [x] weak key_type
+    - [ ] duplicate user for server
+    - [ ] duplicate keys for diff servers
