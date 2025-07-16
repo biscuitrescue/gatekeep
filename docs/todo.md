@@ -1,12 +1,10 @@
-#+TITLE: TODO
-#+AUTHOR: biscuitrescue
-#+DESCRIPTION: Todo in gk
-#+STARTUP: showeverything
-#+OPTIONS: toc:2
+# TODO
 
 - [ ] Agent
   - [ ] write to toml
   - [ ] impl config specified
+
+*** 
 
 - [ ] Cli
   - [ ] Generate
