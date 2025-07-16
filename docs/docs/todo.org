@@ -1,0 +1,29 @@
+#+TITLE: TODO
+#+AUTHOR: biscuitrescue
+#+DESCRIPTION: Todo in gk
+#+STARTUP: showeverything
+#+OPTIONS: toc:2
+
+* TOC :toc:
+- [[#agent][Agent]]
+  - [[#init][init]]
+  - [[#run][run]]
+- [[#cli][Cli]]
+  - [[#config][config]]
+  - [[#policy][policy]]
+
+* Agent
+** init
+- [ ] write to toml
+** run
+- [ ] impl config specified
+* Cli
+** config
+*** Generate
+- [ ] Hash keys??
+** policy
+*** validate
+**** Checks
+- [x] weak key_type
+- [ ] duplicate user for server
+- [ ] duplicate keys for diff servers
