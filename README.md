@@ -46,6 +46,7 @@ allow = ["devs"]
 allow = ["ops"]
 ```
 
+# Setup
 ```bash
 # Clone the repo
 git clone https://github.com/biscuitrescue/gatekeep.git
