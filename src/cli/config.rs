@@ -1,8 +1,8 @@
-use std::fmt::write;
 use std::path::Path;
 use std::fs::{read_to_string, create_dir_all};
 use serde::{Serialize, Deserialize};
 use crate::core::globals;
+use anyhow::Result;
 
 #[derive(Serialize, Deserialize)]
 pub struct Config {
@@ -10,7 +10,7 @@ pub struct Config {
     pub key_type: String,
 }
 
-pub fn read_conf(file: &Path) -> anyhow::Result<Config> {
+pub fn read_conf(file: &Path) -> Result<Config> {
     let content = std::fs::read_to_string(file)
         .map_err(|e| anyhow::anyhow!("Failed to read file: {} with error: {}", file.to_str().unwrap(), e))?;
     let config = toml::from_str(&content)
@@ -18,20 +18,18 @@ pub fn read_conf(file: &Path) -> anyhow::Result<Config> {
     Ok(config)
 }
 
-fn write_config(key: &str, key_type: &str, user: &str, server: &str) -> Result<(), std::io::Error> {
+fn write_config(key: &str, key_type: &str, user: &str, server: &str) -> Result<()> {
 
-    let path = globals::CUR_DIR.join(format!("config/{server}"));
+    let mut path = globals::CUR_DIR.join(format!("config/{server}"));
 
     create_dir_all(&path)?;
 
+    path = path.join(format!("{user}.toml"));
 
-    match globals::write(path, &Config {
+    globals::write(path, &Config {
         key: key.to_owned(),
         key_type: key_type.to_owned(),
-    }) {
-        Ok(()) => Ok(()),
-        Err(e) => Err(anyhow::anyhow!("Failed with error: {:?}", e))
-    }
+    })
 }
 
 pub fn generate(server: &str) -> anyhow::Result<()> {
