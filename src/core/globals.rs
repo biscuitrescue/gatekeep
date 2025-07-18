@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{fs::create_dir_all, path::PathBuf};
 use dirs::home_dir;
 use once_cell::sync::Lazy;
 use serde::Serialize;
@@ -15,6 +15,11 @@ pub static HOME_DIR: Lazy<PathBuf> = Lazy::new(|| -> PathBuf {
 });
 
 pub fn write_toml<T: Serialize>(path: PathBuf, source: &T) -> Result<()> {
+
+    if let Some(parent) = path.parent() {
+        create_dir_all(parent)?;
+    }
+
     let toml_string = toml::to_string_pretty(&source)
         .map_err(|e| anyhow::anyhow!("Couldnt make toml string with err {}", e))?;
 

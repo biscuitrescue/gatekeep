@@ -34,8 +34,7 @@ pub enum Commands {
     },
 }
 
-#[derive(Subcommand)]
-#[derive(Clone)]
+#[derive(Subcommand, Clone)]
 pub enum AgentSubcommand {
     Init {
         #[clap(flatten)]
@@ -49,8 +48,6 @@ pub enum AgentSubcommand {
         config: Option<String>,
     },
 }
-
-
 
 pub fn commit(message: &str) -> anyhow::Result<()> {
     println!("Committed with message: {message}");

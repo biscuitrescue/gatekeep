@@ -1,7 +1,7 @@
 use serde::{Serialize, Deserialize};
-use std::fs::create_dir_all;
 use crate::core::globals;
 use crate::cli::config;
+use anyhow::Result;
 
 #[derive(Serialize, Deserialize)]
 struct Policy {
@@ -10,23 +10,16 @@ struct Policy {
     pub key_type: String,
 }
 
-fn write_policy(key: &str, key_type: &str, user: &str, server: &str) -> Result<(), anyhow::Error> {
-    let policy = Policy {
+fn write_policy(key: &str, key_type: &str, user: &str, server: &str) -> Result<()> {
+
+    let path = globals::CUR_DIR.join(format!("policy/{server}.toml"));
+
+    globals::write_toml(path, &Policy {
         user: user.to_owned(), // TODO: use lifetimes
         key: key.to_owned(),
         key_type: key_type.to_owned(),
-    };
+    })
 
-    // Each server has different policy
-    let path = globals::CUR_DIR.join("policy");
-    create_dir_all(&path)?;
-
-    let toml_string = toml::to_string_pretty(&policy)
-        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
-
-    std::fs::write(path.join(format!("{server}.toml")), toml_string)?;
-
-    Ok(())
 }
 
 pub fn validate(user: &str, server: &str) -> anyhow::Result<()> {

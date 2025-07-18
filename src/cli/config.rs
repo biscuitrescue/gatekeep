@@ -1,5 +1,5 @@
 use std::path::Path;
-use std::fs::{read_to_string, create_dir_all};
+use std::fs::read_to_string;
 use serde::{Serialize, Deserialize};
 use crate::core::globals;
 use anyhow::Result;
@@ -20,11 +20,7 @@ pub fn read_conf(file: &Path) -> Result<Config> {
 
 fn write_config(key: &str, key_type: &str, user: &str, server: &str) -> Result<()> {
 
-    let mut path = globals::CUR_DIR.join(format!("config/{server}"));
-
-    create_dir_all(&path)?;
-
-    path = path.join(format!("{user}.toml")); // TODO: pass path to write_toml and create dir there
+    let path: std::path::PathBuf = globals::CUR_DIR.join(format!("config/{server}/{user}.toml"));
 
     globals::write_toml(path, &Config {
         key: key.to_owned(),
