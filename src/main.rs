@@ -5,7 +5,8 @@ mod core;
 use core::globals;
 
 use clap::Parser;
-use cli::cli::{AgentSubcommand, Cli, Commands};
+use cli::cli::{Cli, Commands};
+use agent::agent::AgentSubcommand;
 
 fn get_server() -> Result<String, anyhow::Error> {
     let owned = hostname::get()
@@ -22,9 +23,9 @@ fn main() -> anyhow::Result<()> {
 
     match cl.command {
         Commands::Agent { subcommand } => match subcommand {
-            AgentSubcommand::Init { source, path } => {
-                println!("Initialising agent config at {}", path);
-                agent::agent::init(source, &path)?;
+            AgentSubcommand::Init { source, path, auth_path } => {
+                println!("Initialising agent config at {}", path.to_string_lossy().into_owned());
+                agent::agent::init(source, path.into(), auth_path.into())?;
             }
             AgentSubcommand::Run { config } => match config {
                 Some(val) => {

@@ -12,7 +12,7 @@ pub struct Cli {
 pub enum Commands {
     Agent {
         #[clap(subcommand)]
-        subcommand: AgentSubcommand,
+        subcommand: crate::agent::agent::AgentSubcommand,
     },
 
     Generate {
@@ -34,20 +34,6 @@ pub enum Commands {
     },
 }
 
-#[derive(Subcommand, Clone)]
-pub enum AgentSubcommand {
-    Init {
-        #[clap(flatten)]
-        source: crate::agent::agent::PolicySource,
-        #[arg(long, short, default_value = "./docs/config.toml")]
-        path: String,
-    },
-
-    Run {
-        #[arg(long, short)]
-        config: Option<String>,
-    },
-}
 
 pub fn commit(message: &str) -> anyhow::Result<()> {
     println!("Committed with message: {message}");

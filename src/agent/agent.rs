@@ -1,7 +1,28 @@
 use std::{path::PathBuf, process::exit};
+use anyhow::Error;
+use clap::Subcommand;
 use clap::Args;
-use anyhow::{Error, Result};
+use anyhow::Result;
 use serde::{Serialize, Deserialize};
+
+use crate::core::globals;
+
+#[derive(Subcommand, Clone)]
+pub enum AgentSubcommand {
+    Init {
+        #[clap(flatten)]
+        source: crate::agent::agent::PolicySource,
+        #[arg(long, short, default_value = "./docs/config.toml")]
+        path: PathBuf,
+        #[arg(long, short)]
+        auth_path: PathBuf,
+    },
+
+    Run {
+        #[arg(long, short)]
+        config: Option<String>,
+    },
+}
 
 #[derive(Serialize, Deserialize)]
 struct AgentConfig {
@@ -30,23 +51,21 @@ struct AuthKeys {
     path: PathBuf
 }
 
-pub fn run(config: PathBuf) -> ! {
+pub fn run(config: PathBuf) -> Error {
     println!("Agent running with config path specified: {}", config.to_string_lossy());
 
     loop {
         if !config.exists() {
-            eprintln!("specified config.toml doesn't exist. Create with `gk agent init <args>`");
-            exit;
+            return anyhow::anyhow!("specified config.toml doesn't exist. Create with `gk agent init <args>`");
         }
         std::thread::sleep(std::time::Duration::from_secs(10));
     }
 } 
 
-pub fn init(source: PolicySource, path: PathBuf) -> Result<()> {
-    let config = AgentConfig {
-        policy_source: source,
-        auth_keys: AuthKeys { path: path }
-    };
+pub fn init(source: PolicySource, path: PathBuf, auth_path: PathBuf) -> Result<()> {
 
-    Ok(())
+    globals::write_toml(path, &AgentConfig {
+        policy_source: source,
+        auth_keys: AuthKeys { path: auth_path }
+    })
 }
