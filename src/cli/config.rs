@@ -1,3 +1,4 @@
+use std::fmt::write;
 use std::path::Path;
 use std::fs::{read_to_string, create_dir_all};
 use serde::{Serialize, Deserialize};
@@ -18,23 +19,19 @@ pub fn read_conf(file: &Path) -> anyhow::Result<Config> {
 }
 
 fn write_config(key: &str, key_type: &str, user: &str, server: &str) -> Result<(), std::io::Error> {
-    let conf = Config {
-        key: key.to_owned(),
-        key_type: key_type.to_owned(),
-    };
 
-    // each server has diff directory
-    // each user has separate file in ./configs/
     let path = globals::CUR_DIR.join(format!("config/{server}"));
 
     create_dir_all(&path)?;
 
-    let toml_string = toml::to_string_pretty(&conf)
-        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
 
-    std::fs::write(path.join(format!("{user}.toml")), toml_string)?;
-
-    Ok(())
+    match globals::write(path, &Config {
+        key: key.to_owned(),
+        key_type: key_type.to_owned(),
+    }) {
+        Ok(()) => Ok(()),
+        Err(e) => Err(anyhow::anyhow!("Failed with error: {:?}", e))
+    }
 }
 
 pub fn generate(server: &str) -> anyhow::Result<()> {
