@@ -1,8 +1,6 @@
-#![allow(unused)]
-use std::path::PathBuf;
-
+use std::{path::PathBuf, process::exit};
 use clap::Args;
-use anyhow::Result;
+use anyhow::{Error, Result};
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
@@ -29,22 +27,25 @@ pub struct PolicySource {
 
 #[derive(Serialize, Deserialize)]
 struct AuthKeys {
-    path: String
+    path: PathBuf
 }
 
 pub fn run(config: PathBuf) -> ! {
     println!("Agent running with config path specified: {}", config.to_string_lossy());
 
     loop {
+        if !config.exists() {
+            eprintln!("specified config.toml doesn't exist. Create with `gk agent init <args>`");
+            exit;
+        }
         std::thread::sleep(std::time::Duration::from_secs(10));
     }
-}
+} 
 
-pub fn init(source: PolicySource, path: &str) -> Result<()> {
-
+pub fn init(source: PolicySource, path: PathBuf) -> Result<()> {
     let config = AgentConfig {
         policy_source: source,
-        auth_keys: AuthKeys { path: path.to_owned() }
+        auth_keys: AuthKeys { path: path }
     };
 
     Ok(())
