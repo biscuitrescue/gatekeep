@@ -1,9 +1,6 @@
-use anyhow::Error;
-use anyhow::Result;
-use clap::Args;
-use clap::Subcommand;
+use anyhow::{Error, Result};
+use clap::{Subcommand, Args};
 use serde::{Deserialize, Serialize};
-use std::path::Path;
 use std::path::PathBuf;
 
 use crate::core::globals;
@@ -14,7 +11,7 @@ pub enum AgentSubcommand {
         #[clap(flatten)]
         source: crate::agent::agent::PolicySource,
 
-        #[arg(long, short, default_value = get_doc_path())]
+        #[arg(long, short, default_value = globals::CUR_DIR.join("docs/agent/config.toml").into_os_string())]
         path: PathBuf,
 
         #[arg(long, short)]
@@ -77,8 +74,4 @@ pub fn init(source: PolicySource, path: PathBuf, auth_path: PathBuf) -> Result<(
             auth_keys: AuthKeys { path: auth_path },
         },
     )
-}
-
-fn get_doc_path() -> PathBuf {
-    globals::CUR_DIR.join("docs/agent/config.toml")
 }
