@@ -14,7 +14,7 @@ pub static HOME_DIR: Lazy<PathBuf> = Lazy::new(|| -> PathBuf {
         .expect("Couldnt get current working directory")
 });
 
-pub fn write<T: Serialize>(path: PathBuf, source: &T) -> Result<()> {
+pub fn write_toml<T: Serialize>(path: PathBuf, source: &T) -> Result<()> {
     let toml_string = toml::to_string_pretty(&source)
         .map_err(|e| anyhow::anyhow!("Couldnt make toml string with err {}", e))?;
 

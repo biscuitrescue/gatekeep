@@ -24,9 +24,9 @@ fn write_config(key: &str, key_type: &str, user: &str, server: &str) -> Result<(
 
     create_dir_all(&path)?;
 
-    path = path.join(format!("{user}.toml"));
+    path = path.join(format!("{user}.toml")); // TODO: pass path to write_toml and create dir there
 
-    globals::write(path, &Config {
+    globals::write_toml(path, &Config {
         key: key.to_owned(),
         key_type: key_type.to_owned(),
     })
