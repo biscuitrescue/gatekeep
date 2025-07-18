@@ -12,8 +12,10 @@ pub enum AgentSubcommand {
     Init {
         #[clap(flatten)]
         source: crate::agent::agent::PolicySource,
-        #[arg(long, short, default_value = "./docs/config.toml")]
+
+        #[arg(long, short, default_value = globals::CUR_DIR.join("docs/agent/config.toml").to_str().expect("no"))]
         path: PathBuf,
+
         #[arg(long, short)]
         auth_path: PathBuf,
     },

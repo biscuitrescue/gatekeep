@@ -12,7 +12,7 @@ struct Policy {
 
 fn write_policy(key: &str, key_type: &str, user: &str, server: &str) -> Result<()> {
 
-    let path = globals::CUR_DIR.join(format!("policy/{server}.toml"));
+    let path = globals::CUR_DIR.join(format!("docs/policy/{server}.toml"));
 
     globals::write_toml(path, &Policy {
         user: user.to_owned(), // TODO: use lifetimes

@@ -1,0 +1,7 @@
+[policy_source]
+type = "git"
+url = "github.com/biscuitrescue/gatekeep.git"
+ssh_key = "ed25519"
+
+[auth_keys]
+path = "./auth"

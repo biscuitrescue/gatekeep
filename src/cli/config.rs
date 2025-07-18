@@ -20,7 +20,7 @@ pub fn read_conf(file: &Path) -> Result<Config> {
 
 fn write_config(key: &str, key_type: &str, user: &str, server: &str) -> Result<()> {
 
-    let path: std::path::PathBuf = globals::CUR_DIR.join(format!("config/{server}/{user}.toml"));
+    let path: std::path::PathBuf = globals::CUR_DIR.join(format!("docs/config/{server}/{user}.toml"));
 
     globals::write_toml(path, &Config {
         key: key.to_owned(),

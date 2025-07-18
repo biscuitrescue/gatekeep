@@ -32,7 +32,7 @@ fn main() -> anyhow::Result<()> {
                     agent::agent::run(val.into());
                 }
                 None => {
-                    let path = globals::CUR_DIR.join("docs/config.toml");
+                    let path = globals::CUR_DIR.join("docs/agent/config.toml");
                     if !path.exists() {
                         return Err(anyhow::anyhow!(
                             "No config file found or supplied! Quitting..."
