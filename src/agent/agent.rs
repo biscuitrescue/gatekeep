@@ -62,6 +62,7 @@ pub fn run(config: PathBuf) -> Error {
                 "specified config.toml doesn't exist. Create with `gk agent init <args>`"
             );
         }
+        // TODO: Read config.toml ?? globals?
         std::thread::sleep(std::time::Duration::from_secs(10));
     }
 }
