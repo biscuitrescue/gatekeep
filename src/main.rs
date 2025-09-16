@@ -18,6 +18,7 @@ fn get_server() -> Result<String, anyhow::Error> {
     Ok(default)
 }
 
+
 fn main() -> anyhow::Result<()> {
     let cl = Cli::parse();
 
