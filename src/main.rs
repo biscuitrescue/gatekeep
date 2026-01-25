@@ -34,7 +34,6 @@ fn main() -> anyhow::Result<()> {
                 );
                 agent::agent::init(source, path.into(), auth_path.into())?;
             }
-            // TODO: Change run format
             AgentSubcommand::Run { config } => match config {
                 Some(val) => {
                     let _ = agent::agent::run(val.into());

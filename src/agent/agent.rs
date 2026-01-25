@@ -42,7 +42,7 @@ pub struct PolicySource {
     pub branch: Option<String>,
 
     #[arg(long)]
-    pub ssh_key: String,
+    pub ssh_key_path: PathBuf,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -62,7 +62,8 @@ pub fn run(config: PathBuf) -> Result<()> {
                 "specified config.toml doesn't exist. Create with `gk agent init <args>`"
             ));
         }
-        // TODO: Read config.toml ?? globals?
+        let _cfg: AgentConfig = globals::read_toml(&config).expect("Failed to read config.toml");
+
         // TODO: never ending loop -> doesnt check sigint, sigterm
         std::thread::sleep(std::time::Duration::from_secs(10));
     }
