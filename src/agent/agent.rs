@@ -63,6 +63,7 @@ pub fn run(config: PathBuf) -> Result<()> {
             ));
         }
         // TODO: Read config.toml ?? globals?
+        // TODO: never ending loop -> doesnt check sigint, sigterm
         std::thread::sleep(std::time::Duration::from_secs(10));
     }
 }
