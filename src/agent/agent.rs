@@ -1,5 +1,5 @@
-use anyhow::{Error, Result};
-use clap::{Subcommand, Args};
+use anyhow::Result;
+use clap::{Args, Subcommand};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
@@ -50,7 +50,7 @@ struct AuthKeys {
     path: PathBuf,
 }
 
-pub fn run(config: PathBuf) -> Error {
+pub fn run(config: PathBuf) -> Result<()> {
     println!(
         "Agent running with config path specified: {}",
         config.to_string_lossy()
@@ -58,9 +58,9 @@ pub fn run(config: PathBuf) -> Error {
 
     loop {
         if !config.exists() {
-            return anyhow::anyhow!(
+            return Err(anyhow::anyhow!(
                 "specified config.toml doesn't exist. Create with `gk agent init <args>`"
-            );
+            ));
         }
         // TODO: Read config.toml ?? globals?
         std::thread::sleep(std::time::Duration::from_secs(10));

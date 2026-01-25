@@ -18,7 +18,6 @@ fn get_server() -> Result<String, anyhow::Error> {
     Ok(default)
 }
 
-
 fn main() -> anyhow::Result<()> {
     let cl = Cli::parse();
 
@@ -35,9 +34,10 @@ fn main() -> anyhow::Result<()> {
                 );
                 agent::agent::init(source, path.into(), auth_path.into())?;
             }
+            // TODO: Change run format
             AgentSubcommand::Run { config } => match config {
                 Some(val) => {
-                    agent::agent::run(val.into());
+                    let _ = agent::agent::run(val.into());
                 }
                 None => {
                     let path = globals::CUR_DIR.join("docs/agent/config.toml");
@@ -46,7 +46,7 @@ fn main() -> anyhow::Result<()> {
                             "No config file found or supplied! Quitting..."
                         ));
                     }
-                    agent::agent::run(path);
+                    let _ = agent::agent::run(path);
                 }
             },
         },
