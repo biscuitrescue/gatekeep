@@ -1,72 +1,9 @@
-mod agent;
-mod cli;
-mod core;
-
-use core::globals;
-
-use agent::agent::AgentSubcommand;
 use clap::Parser;
-use cli::cli::{Cli, Commands};
 
-fn get_server() -> Result<String, anyhow::Error> {
-    let owned = hostname::get()
-        .map_err(|e| anyhow::anyhow!("Failed to get hostname {e}"))?
-        .to_string_lossy()
-        .into_owned();
-    let default: String = owned;
-    println!("Using {default} as hostname. Use --server for better accuracy");
-    Ok(default)
-}
-
-fn main() -> anyhow::Result<()> {
-    let cl = Cli::parse();
-
-    match cl.command {
-        Commands::Agent { subcommand } => match subcommand {
-            AgentSubcommand::Init {
-                source,
-                path,
-                auth_path,
-            } => {
-                println!(
-                    "Initialising agent config at {}",
-                    path.to_string_lossy().into_owned()
-                );
-                agent::agent::init(source, path.into(), auth_path.into())?;
-            }
-            AgentSubcommand::Run { config } => match config {
-                Some(val) => {
-                    let _ = agent::agent::run(val.into());
-                }
-                None => {
-                    let path = globals::CUR_DIR.join("docs/agent/config.toml");
-                    if !path.exists() {
-                        return Err(anyhow::anyhow!(
-                            "No config file found or supplied! Quitting..."
-                        ));
-                    }
-                    let _ = agent::agent::run(path);
-                }
-            },
-        },
-        Commands::Generate { server } => {
-            let server_name: String = match server {
-                Some(s) => s,
-                None => get_server().unwrap(),
-            };
-            cli::config::generate(&server_name)?;
-        }
-        Commands::Commit { message } => {
-            cli::cli::commit(&message)?;
-        }
-        Commands::Validate { user, server } => {
-            let server_name: String = match server {
-                Some(s) => s,
-                None => get_server().unwrap(),
-            };
-            cli::policy::validate(&user, &server_name)?;
-        }
+fn main() {
+    let cli = gatekeep::cli::Cli::parse();
+    if let Err(e) = gatekeep::cli::run(cli) {
+        eprintln!("error: {e:#}");
+        std::process::exit(1);
     }
-
-    Ok(())
 }

@@ -1,0 +1,14 @@
+email = "bob@example.com"
+groups = ["ops"]
+
+[[keys]]
+device = "desktop"
+key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOhSC0UA0DzaFND0hy22S59lcDrvIAvZCS0BTsd6CeIc"
+added = "2026-01-15"
+
+# Old RSA key kept for a migration window; sshd also enforces the expiry.
+[[keys]]
+device = "legacy-workstation"
+key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCjjXXzUWAZ+PsYTmcnWmmaAonmGgXcZd0QZWWTjfBadCBv47MYbLS3wwUmHpFJKKduhhvfRDWvZh9STzwu4zFg7hf/uL/FChlP2jIbDEjfohVbDhivg9yz6z2dPnI7aMPvFO4XQfKflR83PDZdliQewJMhNPNQte1kwnLyiy1I3ZuaQLzQObvXdDI6eTaO/UZg4BdLqb7EJVd3AiLZqc5UPGfKn1hQHN8fFwzuYye/Fz/2kj9rLSh4PAEnnDIgRuAHIH2L+6A8EkYkK8zAMCjVyeECmVzqxMDRWKEIrVCIk3VeivuuNHboUnS0kGwrA4Z/kvGfceQT6KqCFC1kZUJb426M1oB6wjfxKzSzJYx4ErfZgnhPqPjKCUdhCOxr4YWHUTXtT0jxqYbys+VTNxbn2uadCwABs75nSTZSxWVDnUF4KDvhRBxKASZ/4LG3v8XaxiR30VEN4opcqPVPVCvSErgsp+MxFiuFEF3XEsw4t7WjfjwvZD299Ssx7q8JIkR09vKU3NAI5VaELXjWqKQkuhsqeeeisqVaAHDCFYXoi4IH5AAnUsIPxGQkO0l1lHWGk57lvLQOS0fEpYJOHp4TtBUmn8F4n//DbUfp8AtWuCvtiYS01uG/MXQFeJsSN+icV+Fc4A4x9vXfJihpujGrF2oDdzU/HGKeBTCVgJ4VjQ=="
+expires = "2027-01-01"
+added = "2024-06-01"

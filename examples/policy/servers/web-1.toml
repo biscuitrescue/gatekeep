@@ -1,0 +1,8 @@
+description = "Public web frontend"
+
+[logins.deploy]
+groups = ["devs"]
+users = ["ci"]
+
+[logins.root]
+groups = ["ops"]

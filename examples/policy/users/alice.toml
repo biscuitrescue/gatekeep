@@ -1,0 +1,13 @@
+email = "alice@example.com"
+groups = ["devs"]
+
+[[keys]]
+device = "laptop"
+key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAmKxq7w3LYLq9/o8LH8jKZr9v0RovlSnlbNWEUlCH3b"
+added = "2026-03-02"
+
+[[keys]]
+device = "desktop"
+key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0k6C6QyLN4BdNleJy+hJjFK7jt85PZ3R3Wb21t874k"
+expires = "2027-03-31"
+added = "2026-04-11"

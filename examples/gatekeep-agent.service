@@ -1,0 +1,19 @@
+[Unit]
+Description=GateKeep SSH access agent
+Documentation=https://github.com/biscuitrescue/gatekeep
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/gk agent run --config /etc/gatekeep/agent.toml
+Restart=always
+RestartSec=10
+# The agent only needs to write keys and its policy checkout.
+ProtectSystem=strict
+ReadWritePaths=/etc/ssh/authorized_keys.d /var/lib/gatekeep
+ProtectHome=yes
+PrivateTmp=yes
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target

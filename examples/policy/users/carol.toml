@@ -1,0 +1,7 @@
+email = "carol@example.com"
+groups = ["devs", "ops"]
+
+[[keys]]
+device = "laptop"
+key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIif44nJno4ymAZUAqSam2l+vNKhUvpQxa8s0U68jaLW"
+added = "2026-05-20"

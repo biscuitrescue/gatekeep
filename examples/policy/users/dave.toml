@@ -1,0 +1,8 @@
+email = "dave@contractor.example"
+groups = ["devs"]
+disabled = true
+
+[[keys]]
+device = "laptop"
+key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPCZyy1vAatx7XswcET5JtlI5ezy1r8XFQ5fdFGVZ2Yg"
+added = "2025-11-03"

@@ -1,0 +1,18 @@
+# /etc/gatekeep/agent.toml: written by `gk agent init`, shown here for reference.
+
+# Name of this machine in the policy (servers/<name>.toml). Defaults to the hostname.
+server = "web-1"
+
+# One authorized_keys file per unix login. Pair with this sshd_config line:
+#   AuthorizedKeysFile /etc/ssh/authorized_keys.d/%u
+output_dir = "/etc/ssh/authorized_keys.d"
+
+interval_secs = 60
+
+[source]
+type = "git"
+url = "git@github.com:example-corp/ssh-access.git"
+branch = "main"
+# Read-only deploy key for the policy repository.
+ssh_key = "/etc/gatekeep/deploy_key"
+checkout_dir = "/var/lib/gatekeep/policy"

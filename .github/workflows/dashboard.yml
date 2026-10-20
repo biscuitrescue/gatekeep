@@ -1,0 +1,51 @@
+# CD: publishes the dashboard for the example policy (demo data only) to
+# GitHub Pages on every push to master. Requires Settings > Pages > Source:
+# "GitHub Actions".
+#
+# A real company policy must not be published like this; use the private
+# workflow that `gk init --ci` writes into the policy repository instead.
+name: Dashboard
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build --release --locked
+      - name: Validate and render example policy
+        run: |
+          ./target/release/gk --policy examples/policy validate
+          ./target/release/gk --policy examples/policy dashboard --out site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

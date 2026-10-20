@@ -1,0 +1,7 @@
+description = "Primary PostgreSQL"
+
+[logins.postgres]
+groups = ["ops"]
+
+[logins.root]
+groups = ["ops"]

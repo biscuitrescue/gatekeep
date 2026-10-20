@@ -1,0 +1,71 @@
+# GateKeep policy pipeline (written by `gk init --ci`).
+#
+# - Every pull request is validated, so a broken policy never reaches the
+#   branch the agents pull from.
+# - Every push to the default branch rebuilds the access dashboard and keeps it
+#   as a workflow artifact, visible only to people with access to this repo.
+#
+# The dashboard lists users, servers and who has root. Don't publish it to a
+# public GitHub Pages site.
+name: gatekeep
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    # Daily, so expiring keys show up in the dashboard and checks.
+    - cron: "17 6 * * *"
+
+permissions:
+  contents: read
+
+env:
+  GATEKEEP_REPO: https://github.com/biscuitrescue/gatekeep
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+
+      - uses: actions/cache@v4
+        id: gk-cache
+        with:
+          path: ~/.cargo/bin/gk
+          # Bump the suffix to pick up a newer gk.
+          key: gk-${{ runner.os }}-v1
+
+      - name: Install gk
+        if: steps.gk-cache.outputs.cache-hit != 'true'
+        run: cargo install --locked --git "$GATEKEEP_REPO" gk
+
+      - name: Validate policy
+        run: gk validate
+
+      - name: Show access changes in this pull request
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --depth=1 origin "${{ github.base_ref }}"
+          git worktree add /tmp/base FETCH_HEAD
+          gk --policy /tmp/base access > /tmp/before.txt || true
+          gk access > /tmp/after.txt
+          {
+            echo '## Access changes'
+            echo '```diff'
+            diff -u /tmp/before.txt /tmp/after.txt || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build dashboard
+        if: github.event_name != 'pull_request'
+        run: gk dashboard --out site
+
+      - uses: actions/upload-artifact@v4
+        if: github.event_name != 'pull_request'
+        with:
+          name: gatekeep-dashboard
+          path: site/
+          retention-days: 30

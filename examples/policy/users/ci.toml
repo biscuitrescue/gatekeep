@@ -1,0 +1,7 @@
+# Service account used by the deploy pipeline. Only allowed from the CI network.
+email = "platform@example.com"
+
+[[keys]]
+device = "github-actions"
+key = "from=\"10.20.0.0/16\" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILm7iYFw40zXZuHDj5aWaNyFc64VT2ipopMlDuilv7ua"
+added = "2026-02-01"
